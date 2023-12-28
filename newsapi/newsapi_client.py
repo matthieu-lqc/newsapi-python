@@ -123,7 +123,21 @@ class NewsApiClient(object):
             else:
                 raise TypeError("language param should be of type str")
 
+        # Domain restrictions
+        if search_in is not None:
+            if is_valid_string(searchIn):
+                valid_fields = ['title', 'description', 'content']
+                input_fields = search_in.split(',')
+                
+                # Check if all provided fields are valid, if so add it to payload
+                if all(field in valid_fields for field in input_fields):
+                    payload["searchIn"] = search_in
+                else:
+                    raise ValueError("Invalid searchIn fields, valid options are: 'title', 'description', 'content'")
+            else:
+                raise TypeError("searchIn param should be of type str")
 
+        
         # Country
         if country is not None:
             if is_valid_string(country):
